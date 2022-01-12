@@ -3,6 +3,7 @@ from django.shortcuts import *
 from . models import *
 from datetime import datetime
 from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 
 
 # Create your views here.
@@ -19,18 +20,20 @@ def home(request):
 def save_data(request):
     try:
         if request.method == 'POST':
+            eid = request.POST.get('empid')
             name = request.POST.get('name')
             task = request.POST.get('task')
             print(name , task)
-            if name and task:
-                em_data = employe_data(employe_name = name , task = task , date_time = datetime.now())
-                em_data.save()
-                x = employe_data.objects.values()
-                emp_data = list(x)
+            
+            em_data = employe_data(employe_name = name , task = task , date_time = datetime.now())
+           
+            em_data.save()
+            x = employe_data.objects.values()
+            emp_data = list(x)
                 # print(emp_data)
-                return JsonResponse({"status":"save" , "emp_data": emp_data})
-            else:
-                return JsonResponse({"status": 0})     
+            return JsonResponse({"status":"save" , "emp_data": emp_data})
+        else:
+            return JsonResponse({"status": 0})     
     except Exception as e:
         # print('this is error try again' ,e)
         return JsonResponse({"status":"this error "})
@@ -40,7 +43,7 @@ def delete_data(request):
     try:
         if request.method == "POST":
             id = request.POST.get('eid')
-            print(id)
+            # print(id)
             x = employe_data.objects.get(pk = id)
             x.delete()
             return JsonResponse({"status": 1})
@@ -50,5 +53,22 @@ def delete_data(request):
     except:
         return render(request , 'home.html')
 
+# edit part ajax get the id from django
+@csrf_exempt
+def edit_data(request ,pk , item):
+    try:
+        if request.method == "PUT":
+            id = request.POST.get('eid')
+            
+            print(pk , item)
+            e_data = employe_data.objects.get(id=pk)
+            e_data.task = item
+            e_data.save()
+           
+            return JsonResponse({"data":"success" })
 
+    except:
+        return render(request , 'home.html')
+
+                
    

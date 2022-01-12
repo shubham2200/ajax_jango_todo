@@ -12,7 +12,14 @@
         integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
         crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
     <title>home</title>
+    <style>
+        .task_c{
+            border: none;
+            
+        }
+    </style>
 </head>
 
 <body>
@@ -27,6 +34,7 @@
             <div class="col-sm-6  ">
                 <form action=""  class="form" method="post">
                     {% csrf_token %}
+                    <input type="hidden" name="emid" id="empid">
                     <div class="form-floating  text-centers mb-3">
                         <input type="text" class="form-control" id="username" name="username" placeholder="Employe name">
                         <label for="floatingInput">Employe_name </label>
@@ -59,9 +67,9 @@
                     <tbody id="tbody" >
                         {% for i in user %}
                         <tr>
-                            <td>{{i.id}}</td>
-                            <td>{{i.employe_name}}</td>
-                            <td>{{i.task}}</td>
+                            <td id="{{i.id}}"></td>
+                            <td >{{i.employe_name}}</td>
+                            <td ><input type="text" value="{{i.task}}" id="{{i.id}}" class="task_c"></td>
                             <td>
                                 <input type="button" class="btn btn-warning btn-sm btn-edit" data-eid={{i.id}} value="edit">
                                 <input type="button" class="btn btn-danger btn-sm btn-delete" data-eid={{i.id}} value="delete">
